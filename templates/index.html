@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PokeApp Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+</head>
+<body>
+    <div class="fondo-deco"></div>
+
+    <!-- Personajes decorativos del anime XY -->
+    <div class="personajes">
+        <img class="personaje ash"
+             src="{{ url_for('static', filename='img/ash.png') }}"
+             alt="Ash Ketchum">
+        <img class="personaje bonnie"
+             src="{{ url_for('static', filename='img/bonnie.png') }}"
+             alt="Bonnie">
+        <img class="personaje serena"
+             src="{{ url_for('static', filename='img/serena.png') }}"
+             alt="Serena">
+        <img class="personaje clemont"
+             src="{{ url_for('static', filename='img/clemont.png') }}"
+             alt="Clemont">
+    </div>
+
+    <div class="contenedor-principal">
+        <h1>&#x25CF; PokéDex</h1>
+        <p class="subtitulo">Busca cualquier Pokémon y conoce todos sus datos</p>
+
+        <form method="POST">
+            <div class="buscador">
+                <input type="text" name="pokemon_name" placeholder="Ej. Charizard, Eevee..." required>
+                <button type="submit">Buscar</button>
+            </div>
+        </form>
+
+        {% if pokemon %}
+            {% if pokemon == 'no encontrado' %}
+                <p class="error">&#x26A0; Pokémon no encontrado. Intenta con otro nombre.</p>
+            {% else %}
+            <div class="card">
+                <!-- Encabezado de la tarjeta -->
+                <div class="card-header">
+                    <div class="tipos-header">
+                        {% for tipo in pokemon.types %}
+                            <span class="type {{ tipo }}">{{ tipo }}</span>
+                        {% endfor %}
+                    </div>
+                    <h2>{{ pokemon.name.capitalize() }}</h2>
+                    <img class="pokemon-img" src="{{ pokemon.image }}" alt="{{ pokemon.name }}">
+                </div>
+
+                <!-- Grid de información -->
+                <div class="info-grid">
+
+                    <!-- Características físicas -->
+                    <div class="seccion">
+                        <h3>&#x1F4CF; Características Físicas</h3>
+                        <div class="fisicas-grid">
+                            <div class="fisica-item">
+                                <span class="fisica-label">Altura</span>
+                                <span class="fisica-valor">{{ (pokemon.height / 10) | round(1) }} m</span>
+                            </div>
+                            <div class="fisica-item">
+                                <span class="fisica-label">Peso</span>
+                                <span class="fisica-valor">{{ (pokemon.weight / 10) | round(1) }} kg</span>
+                            </div>
+                            <div class="fisica-item">
+                                <span class="fisica-label">Exp. Base</span>
+                                <span class="fisica-valor">{{ pokemon.base_experience }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Habilidades -->
+                    <div class="seccion">
+                        <h3>&#x2728; Habilidades</h3>
+                        <div class="habilidades">
+                            {% for habilidad in pokemon.abilities %}
+                                <span class="habilidad">{{ habilidad.replace('-', ' ').title() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Estadísticas base -->
+                <div class="seccion">
+                    <h3>&#x1F4CA; Estadísticas Base</h3>
+                    {% for stat in pokemon.stats %}
+                    <div class="stat-row">
+                        <span class="stat-name">{{ stat.name.replace('-', ' ').title() }}</span>
+                        <div class="stat-bar-bg">
+                            <div class="stat-bar" style="width: {{ stat.percent | round(1) }}%"></div>
+                        </div>
+                        <span class="stat-value">{{ stat.value }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Línea evolutiva -->
+                {% if pokemon.evoluciones | length > 1 %}
+                <div class="seccion">
+                    <h3>&#x1F300; Línea Evolutiva</h3>
+                    <div class="evo-cadena">
+                        {% for evo in pokemon.evoluciones %}
+                            <div class="evo-item {% if evo.name == pokemon.name %}evo-actual{% endif %}">
+                                <img src="{{ evo.image }}" alt="{{ evo.name }}">
+                                <span>{{ evo.name.capitalize() }}</span>
+                            </div>
+                            {% if not loop.last %}
+                                <div class="evo-flecha">&#x27A1;</div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
