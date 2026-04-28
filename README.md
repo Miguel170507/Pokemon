@@ -34,7 +34,7 @@ Aplicación web desarrollada con **Flask** y **Python** que consume la [PokéAPI
 
 **1. Clona el repositorio**
 ```bash
-git clone https://github.com/TuUsuario/TuRepositorio.git
+git clone https://github.com/miguel170507/pokemon.git
 cd TuRepositorio
 ```
 
