@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request
 import requests  # Permite realizar las solicitudes HTTP a la API
 
-appPokemon = Flask(__name__)  # nombre de la aplicacion "appPokemon"
+app = Flask(__name__)
+appPokemon = app  # alias para compatibilidad con Vercel
 
 def obtener_cadena_evolutiva(chain):
     """Recorre la cadena evolutiva y devuelve una lista de nombres en orden."""
